@@ -1,0 +1,13 @@
+.well
+  .span6
+    %h2 Sign up
+    = form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| 
+      %fieldset
+        %p
+          = f.label :email
+          = f.email_field :email, :placeholder => "required",:size => '30' 
+        %p
+          = f.label :password
+          = f.password_field :password, :placeholder => "required", :size => '30' 
+        %p
+          = f.submit "Sign Up", :style => 'align-center' 

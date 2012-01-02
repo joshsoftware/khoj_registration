@@ -1,0 +1,14 @@
+.well
+  .span6
+    %h2 Sign in
+    = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+      %fieldset
+        %p
+          = f.label :email
+          = f.email_field :email, :placeholder => "required",:size => '30' 
+        %p
+          = f.label :password
+          = f.password_field :password, :placeholder => "required", :size => '30' 
+        %p
+          = f.submit "Sign in", :style => 'align-center' 
+
