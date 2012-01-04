@@ -1,0 +1,7 @@
+- if flash.present?
+  - content_for :alerts do
+    .container
+      .alert-message.block-message.fade.in{:class => flash.keys.first, 'data-alert' => :alert}
+        %a.close{:href => "#"} ×
+        %p
+          %strong= flash[flash.keys.first]
