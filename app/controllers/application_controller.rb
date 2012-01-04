@@ -10,4 +10,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def unauthorized_user
+    flash[:notice] = I18n.t('access.restrict')
+    redirect_to '/' and return
+  end
+
 end

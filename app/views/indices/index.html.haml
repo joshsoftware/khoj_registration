@@ -1,0 +1,19 @@
+.page-header
+  %h1
+    Indices
+    %small all index and document count
+.row
+  .span10
+    - if @indices.any?
+      %table.bordered-table
+        %tr
+          %th Sr no
+          %th Name
+          %th Document Count
+          %th Created At
+          %tr
+            = render :partial => 'index', :collection => @indices
+    - else
+      %h3 No Indices registered !!!
+
+  

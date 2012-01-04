@@ -3,6 +3,10 @@ KhojRegistration::Application.routes.draw do
 
   devise_for :users, :controllers => {:confirmations => 'confirmations'}
 
+  resources :users, :only => [] do
+    resources :indices, :only => [:index]
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

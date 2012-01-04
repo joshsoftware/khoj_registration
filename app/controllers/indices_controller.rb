@@ -1,5 +1,9 @@
 class IndicesController < ApplicationController
+  before_filter :authenticate_user!
+  before_filter :load_user
+
   def index
+    @indices = @user.indices
   end
 
   def show
@@ -19,4 +23,12 @@ class IndicesController < ApplicationController
 
   def destroy
   end
+
+  private
+
+  def load_user
+    @user = User.find_by_id(params[:user_id]) 
+    unauthorized_user unless @user == current_user
+  end
+
 end

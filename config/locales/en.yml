@@ -3,3 +3,5 @@
 
 en:
   hello: "Hello world"
+  access:
+    restrict: You do not have sufficent privileges.
