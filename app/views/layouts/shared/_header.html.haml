@@ -1,18 +1,29 @@
-.topbar-wrapper
-  .topbar
-    .topbar-inner
-      .container
-        %h2
-          Welcome to Khoj, searching is now far more better and simple.
-        - if user_signed_in?
-          %ul
-            %li
-              = link_to "Sign Out", destroy_user_session_path, :title => "Log Out", :method => :delete
-        - else
-          %ul
-            %li
-              = link_to "Home", root_path
-            %li
-              = link_to "Sign In", new_user_session_path
-            %li
-              = link_to "Sign Up", new_user_registration_path
+:javascript
+  $('#dropdown').dropdown();
+  $(".alert-message").alert();
+%h3
+  %a{:href => "#"} Khoj Registration
+%ul.nav
+  - if user_signed_in?
+    %li
+      = link_to "View indices", user_indices_path(current_user)
+  - else
+    %li.active
+      = link_to "Home", root_path
+  %li.dropdown
+    %a.dropdown-toggle{:href => "#"} Account
+    %ul.dropdown-menu
+      - if user_signed_in?
+        %li
+          = link_to "Sign Out", destroy_user_session_path, :title => "Log Out", :method => :delete
+      - else
+        %li
+          = link_to "Sign In", new_user_session_path
+        %li.divider
+        %li
+          = link_to "Sign Up", new_user_registration_path
+- unless user_signed_in?
+  = form_for "user", :url => user_session_path, :as => :post, :html => {:class => 'pull-right'} do
+    = text_field "user", "email", :placeholder => "E-Mail", :class => "input-small"
+    = password_field "user", "password", :placeholder => "Password", :class => "input-small"
+    %button.btn{:type => "submit"} Sign in

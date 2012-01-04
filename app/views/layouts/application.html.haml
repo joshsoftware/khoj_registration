@@ -1,12 +1,21 @@
-!!!
-%html
-  %head
-    %title KhojRegistration
-    = stylesheet_link_tag    "application"
-    = stylesheet_link_tag    "bootstrap.css"
-    = javascript_include_tag "application"
-    = csrf_meta_tags
-  %body
-    = render 'layouts/shared/header'
-    = yield
+- unless content_for? :alerts
+  = render 'layouts/alerts'
 
+- unless content_for? :layout_content
+  - content_for :layout_content do
+    = yield(:alerts)
+    .container
+      .content
+        = yield
+  
+- unless content_for? :layout_header
+  - content_for :layout_header do
+    %h2
+      Welcome to Khoj, searching is now far more better and simple.
+    .topbar-wrapper{:style => "z-index: 5;"}
+      .topbar{"data-dropdown" => "dropdown"}
+        .topbar-inner
+          .container
+            = render 'layouts/shared/header'
+
+= render :file => 'layouts/base'
