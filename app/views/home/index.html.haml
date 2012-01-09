@@ -1,2 +1,20 @@
-%h1
-  Welcome to Khoj.
+- if user_signed_in?
+  .page-header
+    %h1
+      Personal Info
+      %small 
+  .row
+    .span10
+      %fieldset{:style => 'margin:0px; padding:0px;'}
+        %label 
+          %h5 Email:
+        %div
+          %h5{:style => 'margin-left:150px;margin-top:5px;'}=current_user.email  
+      %fieldset{:style => 'margin:0px; padding:0px;'}
+        %label 
+          %h5 Public URL:
+        %div
+          %h5{:style => 'margin-left:150px;margin-top:5px;'}=current_user.public_url 
+- else
+  %h1
+    Welcome to Khoj.

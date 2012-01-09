@@ -6,6 +6,8 @@
 %ul.nav
   - if user_signed_in?
     %li
+      = link_to "Personal Info",root_path 
+    %li
       = link_to "View indices", user_indices_path(current_user)
   - else
     %li.active
