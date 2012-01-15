@@ -1,10 +1,11 @@
 KhojRegistration::Application.routes.draw do
+  match '/info', :to => 'home#info', :as => :info
   devise_for :admins
 
   devise_for :users, :controllers => {:confirmations => 'confirmations'}
 
   resources :users, :only => [] do
-    resources :indices, :only => [:index]
+    resources :indices, :only => [:index] 
   end
 
   # The priority is based upon order of creation:

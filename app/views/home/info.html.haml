@@ -1,0 +1,98 @@
+%ul
+  %li  SignUp with Khoj and get the private key for your account.
+  %li  Create an index and populate it with searchable text
+  %li  Send search queries to the index and understand the results
+  %li  Tweak the search results and influence the order in which they appear
+  %li  Delete documents
+
+%h2 About The Example App
+%p The Tutorial shows the process for setting up an index and performing some example queries 
+
+%h2 Step 1: Sign Up on Khoj
+%h3 Private key
+%h5 This is the base url for authenticated API calls. 
+.well
+  %h5 Example: private_key = 'test-api-key'
+  %h5 Example: index_name  = 'test'
+%h2 Step 2: Install khoj
+.well
+  %h5= "$ gem install 'khoj'"
+%h2 INSTANTIATE THE CLIENT
+%h3 Run the Ruby interpreter
+.well
+  %h5= ":001 >"
+%h3 Import the Khoj client library to the Ruby interpreter by typing the following command at the prompt
+.well
+  %h5= ":001:0> require 'rubygems'"
+  %h5= ":001:0> require 'khoj'"
+%h3 Instantiate the client
+.well
+  %h5  Khoj.config do |c| 
+  %h5  c.api_key = private_key 
+  %h5  c.api_host = Khoj::Configuration::DEFAULTS[:api_host] 
+  %h5  end
+%h3 Get a handle to your test index
+.well
+  %h5 client = Khoj.client(index_name)
+%h2 Step 3: Operations
+%h3 Add some documents to the index.
+.well
+  /%h5 document = {:test => 'from the the test case', :title => 'One', :tags => ['foo', 'baz']}
+  %h5 document = {:text => 'test'}
+  %h5 client.add('_type:_id', value)
+  %h5 Example: client.add('test:1', document)
+%h3 Search
+%h4 Get index by providing _type and _id
+.well
+  %h5 client.get('_type:_id')
+  %h5 Example: client.get('test:1')
+  %h5 Response:  {"_index"=>"test-api-key-test", "_type"=>"test", "_id"=>"1", "_version"=>1, "exists"=>true, "_source"=>{"text"=>"test"}}
+%h4 By default it will check in text field
+.well
+  %h5 client.search(query_term)
+  %h5 Example: client.search('test')
+  %h5 Response:    {"took"=>91, "timed_out"=>false, "_shards"=>{"total"=>5, "successful"=>5, "failed"=>0}, "hits"=>{"total"=>1, "max_score"=>1.6931472, "hits"=>[{"_index"=>"test-api-key-test", "_type"=>"test", "_id"=>"1", "_score"=>1.6931472, "_source"=>{"text"=>"test"}}]}}
+%h3 Specify field in which query  is to be searched
+.well
+  %h5 document = {:text => 'test', :title => 'One'}
+  %h5 client.add('test:1', document)
+  %h5 client.search(query_term, :field => field_name)
+  %h5 Example: client.search('one', :field => 'title')
+  %h5 Response: {"_index"=>"test-api-key-test", "_type"=>"test", "_id"=>"1", "_version"=>2, "exists"=>true, "_source"=>{"text"=>"test", "title"=>"One"}}
+
+%h3 Category Filters(Facet)
+.well
+  %h5 document_1 = {:text => 'test', :title => 'One', :laptop => ['dell', 'apple']}
+  %h5 document_2 = {:text => 'test', :title => 'two', :laptop => ['acer', 'apple']}
+  %h5 Example: client.add('test:1', document_1)
+  %h5 Example: client.add('test:2', document_2)
+  %h5 client.search(query_term, {:field => field_name, :type => _type, :category_filter =>{filed_name => value}})
+  %h5 Example: client.search('test', {:field => 'test', :type => 'test', :category_filter =>{'laptop' => ['apple']}})
+  %h5 Response: {"took"=>10, "timed_out"=>false, "_shards"=>{"total"=>5, "successful"=>5, "failed"=>0}, "hits"=>{"total"=>2, "max_score"=>1.6931472, "hits"=>[{"_index"=>"test-api-key-test", "_type"=>"test", "_id"=>"1", "_score"=>1.6931472, "_source"=>{"text"=>"test", "title"=>"One", "laptop"=>["dell", "apple"]}}, {"_index"=>"test-api-key-test", "_type"=>"test", "_id"=>"2", "_score"=>1.6931472, "_source"=>{"text"=>"test", "title"=>"two", "laptop"=>["acer", "apple"]}}]}, "facets"=>{"laptop"=>{"_type"=>"terms", "missing"=>0, "total"=>4, "other"=>0, "terms"=>[{"term"=>"apple", "count"=>2}, {"term"=>"dell", "count"=>1}, {"term"=>"acer", "count"=>1}]}}}
+%h3 Delete index by id
+.well
+  %h5 client.delete('_type:id')
+  %h5 Example: client.delete('test:1')
+%h2 Sorting
+%h3 Field
+.well
+  %h5 document_1 = {:text => 'test', :title => 'One', :price => '100'}
+  %h5 document_2 = {:text => 'test', :title => 'two', :price => '200'}
+  %h5 Example: client.add('test:1', document_1)
+  %h5 Example: client.add('test:2', document_2)
+  %h5 client.search(query_term, {:field => field_name, "sort" => {:fields => {:field_name => order}}})
+  %h5 Example: client.search('test', {:field => 'text', "sort" => {:fields => {:price => 'asc'}}})
+  %h5 Response: {"took"=>2, "timed_out"=>false, "_shards"=>{"total"=>5, "successful"=>5, "failed"=>0}, "hits"=>{"total"=>2, "max_score"=>nil, "hits"=>[{"_index"=>"test-api-key-index", "_type"=>"test", "_id"=>"2", "_score"=>nil, "_source"=>{"text"=>"test", "title"=>"two", "price"=>"200"}, "sort"=>["200"]}, {"_index"=>"test-api-key-index", "_type"=>"test", "_id"=>"1", "_score"=>nil, "_source"=>{"text"=>"test", "title"=>"One", "price"=>"100"}, "sort"=>["100"]}]}} 
+
+%h3 GeoLocation
+%h5 Add GeoLocation Function
+.well
+  %h5 function = Khoj.function(index_name)
+.well
+  %h5 document_1 = {:text => 'test', :location => {:lat => '100.00', :lon => "100.00"}}
+  %h5 document_2 = {:text => 'test', :location => {:lat => '200.00', :lon => "200.00"}}
+  %h5 Example: client.add('test:1', document_1)
+  %h5 Example: client.add('test:2', document_2)
+  %h5 client.search(query_term, {:field => field_name, "sort" => {:geo_location => {:cordinates => ["xx,yy"]}}})
+  %h5 Example: client.search('test', {:field => 'title', "sort" => {:geo_location => {:cordinates => ["100,100"]}}})
+  %h5 Response:{"took"=>4, "timed_out"=>false, "_shards"=>{"total"=>5, "successful"=>5, "failed"=>0}, "hits"=>{"total"=>2, "max_score"=>nil, "hits"=>[{"_index"=>"test-api-key-index", "_type"=>"test", "_id"=>"1", "_score"=>nil, "_source"=>{"text"=>"test", "location"=>{"lat"=>"100.00", "lon"=>"100.00"}}, "sort"=>[1.7976931348623157e+308]}, {"_index"=>"test-api-key-index", "_type"=>"test", "_id"=>"2", "_score"=>nil, "_source"=>{"text"=>"test", "location"=>{"lat"=>"200.00", "lon"=>"200.00"}}, "sort"=>[1.7976931348623157e+308]}]}}  
